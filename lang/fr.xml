@@ -37,6 +37,14 @@
 </app_context>
 
 <common>
+	<cancel>Annuler</cancel>
+	<delete>Supprimer</delete>
+	<file_corrupted>Le fichier est corrompu.</file_corrupted>
+	<no>Non</no>
+	<select_all>Sélectionner tout</select_all>
+	<select>Sélectionner</select>
+	<please_wait>Merci de patienter...</please_wait>
+	<yes>Oui</yes>
 	<wday>
 		<day>dimanche</day>
 		<day>lundi</day>
@@ -60,8 +68,27 @@
 		<month>Novembre</month>
 		<month>Décembre</month>
 	</ymonth>
+	<small_ymonth>
+		<month>janvier</month>
+		<month>février</month>
+		<month>mars</month>
+		<month>avril</month>
+		<month>mai</month>
+		<month>juin</month>
+		<month>juillet</month>
+		<month>août</month>
+		<month>septembre</month>
+		<month>octobre</month>
+		<month>novembre</month>
+		<month>décembre</month>
+	</small_ymonth>
+	<hidden_trophy>Trophée masqué</hidden_trophy>
 	<one_hour_ago>Il y a 1 heure</one_hour_ago>
 	<one_minute_ago>Il y a 1 minute</one_minute_ago>
+	<bronze>Bronze</bronze>
+	<gold>Or</gold>
+	<platinum>Platine</platinum>
+	<silver>Argent</silver>
 	<hours_ago>Il y a {} heures</hours_ago>
 	<minutes_ago>Il y a {} minutes</minutes_ago>
 </common>
@@ -151,6 +178,21 @@ Ne pas éteindre le système, ni fermer l'application.</warning_saving>
 		<system_language>Langue système</system_language>
 	</language>
 </settings>
+
+<trophy_collection>
+	<details>Détails</details>
+	<earned>Obtenu</earned>
+	<name>Nom</name>
+	<no_trophies>Aucun trophée.
+Pour obtenir des trophées, utilisez une application compatible avec cette fonctionnalité.</no_trophies>
+	<not_earned>Pas obtenu</not_earned>
+	<original>Original</original>
+	<sort>Trier</sort>
+	<trophies>Trophées</trophies>
+	<grade>Rang</grade>
+	<progress>Progression</progress>
+	<updated>Mis à jour</updated>
+</trophy_collection>
 
 <user_management>
 	<create_user>Créer un utilisateur</create_user>

@@ -19,6 +19,8 @@
 
 #include <gui/functions.h>
 
+#include <kernel/functions.h>
+
 #include <util/safe_time.h>
 
 #include <io/VitaIoDevice.h>
@@ -132,6 +134,15 @@ void init_lang(GuiState &gui, HostState &host) {
             // Common
             if (!lang_xml.child("common").empty()) {
                 const auto common = lang_xml.child("common");
+                auto &common_dialog = host.common_dialog.lang.common;
+                common_dialog["cancel"] = common.child("cancel").text().as_string();
+                common_dialog["delete"] = common.child("delete").text().as_string();
+                common_dialog["file_corrupted"] = common.child("file_corrupted").text().as_string();
+                common_dialog["no"] = common.child("no").text().as_string();
+                common_dialog["select_all"] = common.child("select_all").text().as_string();
+                common_dialog["select"] = common.child("select").text().as_string();
+                common_dialog["please_wait"] = common.child("please_wait").text().as_string();
+                common_dialog["yes"] = common.child("yes").text().as_string();
                 auto &lang_common = gui.lang.common;
                 if (!common.child("wday").empty()) {
                     for (const auto &day : common.child("wday"))
@@ -141,8 +152,17 @@ void init_lang(GuiState &gui, HostState &host) {
                     for (const auto &month : common.child("ymonth"))
                         lang_common.ymonth.push_back(month.text().as_string());
                 }
+                if (!common.child("small_ymonth").empty()) {
+                    for (const auto &month : common.child("small_ymonth"))
+                        lang_common.small_ymonth.push_back(month.text().as_string());
+                }
+                lang_common.common["hidden_trophy"] = common.child("hidden_trophy").text().as_string();
                 lang_common.common["one_hour_ago"] = common.child("one_hour_ago").text().as_string();
                 lang_common.common["one_minute_ago"] = common.child("one_minute_ago").text().as_string();
+                lang_common.common["bronze"] = common.child("bronze").text().as_string();
+                lang_common.common["gold"] = common.child("gold").text().as_string();
+                lang_common.common["platinum"] = common.child("platinum").text().as_string();
+                lang_common.common["silver"] = common.child("silver").text().as_string();
                 lang_common.common["hours_ago"] = common.child("hours_ago").text().as_string();
                 lang_common.common["minutes_ago"] = common.child("minutes_ago").text().as_string();
             }
@@ -159,7 +179,6 @@ void init_lang(GuiState &gui, HostState &host) {
                     const auto save_data = dialog.child("save_data");
                     if (!save_data.child("delete").empty()) {
                         const auto delete_child = save_data.child("delete");
-                        //lang_save_data["delete"] = delete_child.attribute("name").as_string();
                         lang_save_data["cancel_deleting"] = delete_child.child("cancel_deleting").text().as_string();
                         lang_save_data["deletion_complete"] = delete_child.child("deletion_complete").text().as_string();
                         lang_save_data["delete_saved_data"] = delete_child.child("delete_saved_data").text().as_string();
@@ -264,6 +283,23 @@ void init_lang(GuiState &gui, HostState &host) {
                 // Languague
                 lang_settings["language"] = settings.child("language").attribute("name").as_string();
                 lang_settings["system_language"] = settings.child("language").child("system_language").text().as_string();
+            }
+
+            // Trophy Collection
+            if (!lang_xml.child("trophy_collection").empty()) {
+                const auto trophy_collection = lang_xml.child("trophy_collection");
+                auto &lang_trophy_collection = gui.lang.trophy_collection;
+                lang_trophy_collection["details"] = trophy_collection.child("details").text().as_string();
+                lang_trophy_collection["earned"] = trophy_collection.child("earned").text().as_string();
+                lang_trophy_collection["name"] = trophy_collection.child("name").text().as_string();
+                lang_trophy_collection["no_trophies"] = trophy_collection.child("no_trophies").text().as_string();
+                lang_trophy_collection["not_earned"] = trophy_collection.child("not_earned").text().as_string();
+                lang_trophy_collection["original"] = trophy_collection.child("original").text().as_string();
+                lang_trophy_collection["sort"] = trophy_collection.child("sort").text().as_string();
+                lang_trophy_collection["trophies"] = trophy_collection.child("trophies").text().as_string();
+                lang_trophy_collection["grade"] = trophy_collection.child("grade").text().as_string();
+                lang_trophy_collection["progress"] = trophy_collection.child("progress").text().as_string();
+                lang_trophy_collection["updated"] = trophy_collection.child("updated").text().as_string();
             }
 
             // User Management
@@ -1185,11 +1221,8 @@ void draw_live_area_screen(GuiState &gui, HostState &host) {
     ImGui::GetWindowDrawList()->AddRectFilled(POS_BUTTON, ImVec2(POS_BUTTON.x + START_BUTTON_SIZE.x, POS_BUTTON.y + START_BUTTON_SIZE.y), IM_COL32(20, 168, 222, 255), 10.0f * scal.x, ImDrawCornerFlags_All);
     ImGui::GetWindowDrawList()->AddText(gui.vita_font, scal_default_font, POS_START, IM_COL32(255, 255, 255, 255), BUTTON_STR.c_str());
     ImGui::SetCursorPos(SELECT_POS);
-    const auto is_enable = host.io.title_id.empty()
-        || (gui.apps_list_opened[gui.current_app_selected].find("NPXS") != std::string::npos)
-        || (gui.apps_list_opened[gui.current_app_selected] == host.io.title_id);
     ImGui::SetCursorPos(SELECT_POS);
-    if (ImGui::Selectable("##gate", false, is_enable ? ImGuiSelectableFlags_None : ImGuiSelectableFlags_Disabled, SELECT_SIZE) || ImGui::IsKeyPressed(host.cfg.keyboard_button_cross))
+    if (ImGui::Selectable("##gate", false, ImGuiSelectableFlags_None, SELECT_SIZE) || ImGui::IsKeyPressed(host.cfg.keyboard_button_cross))
         pre_run_app(gui, host, app_path);
     ImGui::PopID();
     ImGui::GetWindowDrawList()->AddRect(GATE_POS, SIZE_GATE, IM_COL32(192, 192, 192, 255), 15.f, ImDrawCornerFlags_All, 12.f);
@@ -1242,9 +1275,12 @@ void draw_live_area_screen(GuiState &gui, HostState &host) {
 
     if (!gui.live_area.content_manager && !gui.live_area.manual) {
         ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 6.f);
-        if (host.io.app_path != app_path) {
-            ImGui::SetCursorPos(ImVec2(display_size.x - (60.0f * scal.x) - BUTTON_SIZE.x, 44.0f * scal.y));
-            if (ImGui::Button("Esc", BUTTON_SIZE) || ImGui::IsKeyPressed(host.cfg.keyboard_button_circle)) {
+        ImGui::SetCursorPos(ImVec2(display_size.x - (60.0f * scal.x) - BUTTON_SIZE.x, 44.0f * scal.y));
+        if (ImGui::Button("Esc", BUTTON_SIZE) || ImGui::IsKeyPressed(host.cfg.keyboard_button_circle)) {
+            if (app_path == host.io.app_path) {
+                stop_all_threads(host.kernel);
+                host.load_exec = true;
+            } else {
                 gui.apps_list_opened.erase(get_app_open_list_index(gui, app_path));
                 if (gui.current_app_selected == 0) {
                     gui.live_area.live_area_screen = false;

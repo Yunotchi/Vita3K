@@ -37,6 +37,14 @@
 </app_context>
 
 <common>
+	<cancel>Cancelar</cancel>
+	<delete>Eliminar</delete>
+	<file_corrupted>El archivo está dañado.</file_corrupted>
+	<no>No</no>
+	<select_all>Seleccionar todo</select_all>
+	<select>Seleccionar</select>
+	<please_wait>Espera un momento...</please_wait>
+	<yes>Sí</yes>
 	<wday>
 		<day>domingo</day>
 		<day>lunes</day>
@@ -60,8 +68,27 @@
 		<month>Noviembre</month>
 		<month>Diciembre</month>
 	</ymonth>
+	<small_ymonth>
+		<month>enero</month>
+		<month>febrero</month>
+		<month>marzo</month>
+		<month>abril</month>
+		<month>mayo</month>
+		<month>junio</month>
+		<month>julio</month>
+		<month>agosto</month>
+		<month>septiembre</month>
+		<month>octubre</month>
+		<month>noviembre</month>
+		<month>diciembre</month>
+	</small_ymonth>
+	<hidden_trophy>Trofeo oculto</hidden_trophy>
 	<one_hour_ago>Hace 1 hora</one_hour_ago>
 	<one_minute_ago>Hace 1 minuto</one_minute_ago>
+	<bronze>Bronce</bronze>
+	<gold>Oro</gold>
+	<platinum>Platino</platinum>
+	<silver>Plata</silver>
 	<hours_ago>Hace {} horas</hours_ago>
 	<minutes_ago>Hace {} minutos</minutes_ago>
 </common>
@@ -151,6 +178,21 @@ No apagues el sistema ni cierres la aplicación.</warning_saving>
 		<system_language>Idioma del sistema</system_language>
 	</language>
 </settings>
+
+<trophy_collection>
+	<details>Detalles</details>
+	<earned>Ganado</earned>
+	<name>Nombre</name>
+	<no_trophies>No hay trofeos.
+Podrás conseguir trofeos si usas una aplicación compatible con la función de trofeos.</no_trophies>
+	<not_earned>No ganado</not_earned>
+	<original>Original</original>
+	<sort>Ordenar</sort>
+	<trophies>Trofeos</trophies>
+	<grade>Grado</grade>
+	<progress>Progreso</progress>
+	<updated>Actualizado</updated>
+</trophy_collection>
 
 <user_management>
 	<create_user>Crear usuario</create_user>
