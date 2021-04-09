@@ -414,9 +414,9 @@ void draw_trophy_collection(GuiState &gui, HostState &host) {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
     ImGui::Begin("##trophy_collection", &gui.live_area.trophy_collection, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings);
     if (is_background)
-        ImGui::GetBackgroundDrawList()->AddImage(gui.apps_background["NPXS10008"], ImVec2(0.f, MENUBAR_HEIGHT), display_size);
+        ImGui::GetBackgroundDrawList()->AddImage(gui.apps_background["NPXS10008"], ImVec2(0.f, 0.f), display_size);
     if (group_id_selected.empty()) {
-        ImGui::SetWindowFontScale(1.4f * SCAL.x);
+        ImGui::SetWindowFontScale(1.4f * SCAL.x / gui.dpiScale);
         if (np_com_id_selected.empty()) {
             ImGui::TextColored(GUI_COLOR_TEXT, "Search");
             ImGui::SameLine();
@@ -426,7 +426,7 @@ void draw_trophy_collection(GuiState &gui, HostState &host) {
         ImGui::TextColored(GUI_COLOR_TEXT, "P    G    S    B");
         ImGui::SetCursorPosY(54.f * SCAL.y);
         ImGui::Separator();
-        ImGui::SetWindowFontScale(1.f);
+        ImGui::SetWindowFontScale(1.f / gui.dpiScale);
     }
     ImGui::SetNextWindowPos(ImVec2(display_size.x / 2.f, (!trophy_id_selected.empty() || detail_np_com_id ? 48.0f : 90.f) * SCAL.y), ImGuiCond_Always, ImVec2(0.5f, 0.f));
     ImGui::BeginChild("##trophy_collection_child", !trophy_id_selected.empty() || detail_np_com_id ? SIZE_INFO : SIZE_LIST, false, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings);
@@ -728,6 +728,7 @@ void draw_trophy_collection(GuiState &gui, HostState &host) {
     ImGui::EndChild();
 
     ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10.f);
+    ImGui::SetWindowFontScale(1.2f * SCAL.x / gui.dpiScale);
     ImGui::SetCursorPos(ImVec2(8.f, display_size.y - (84.f * SCAL.y)));
     if (ImGui::Button("Back", ImVec2(64.f * SCAL.x, 40.f * SCAL.y))) {
         if (!np_com_id_selected.empty()) {

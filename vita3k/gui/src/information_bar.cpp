@@ -380,7 +380,7 @@ static void draw_notice_info(GuiState &gui, HostState &host) {
         ImGui::BeginChild("##notice_info_child", POPUP_SIZE, true, ImGuiWindowFlags_NoSavedSettings);
         auto indicator = gui.lang.indicator;
         if (notice_info.empty()) {
-            ImGui::SetWindowFontScale(1.2f * SCAL.x);
+            ImGui::SetWindowFontScale(1.2f * SCAL.x / gui.dpiScale);
             const auto no_notif = !indicator["no_notif"].empty() ? indicator["no_notif"].c_str() : "There are no notifications";
             const auto calc_text = ImGui::CalcTextSize(no_notif);
             ImGui::SetCursorPos(ImVec2((POPUP_SIZE.x / 2.f) - (calc_text.x / 2.f), (POPUP_SIZE.y / 2.f) - (calc_text.y / 2.f)));
@@ -424,11 +424,11 @@ static void draw_notice_info(GuiState &gui, HostState &host) {
                 ImGui::PopStyleColor(3);
                 ImGui::PopID();
                 ImGui::NextColumn();
-                ImGui::SetWindowFontScale(1.3f * SCAL.x);
+                ImGui::SetWindowFontScale(1.3f * SCAL.x / gui.dpiScale);
                 ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (14.f * SCAL.y));
                 ImGui::TextColored(GUI_COLOR_TEXT, "%s", notice.name.c_str());
                 ImGui::Spacing();
-                ImGui::SetWindowFontScale(0.9f * SCAL.x);
+                ImGui::SetWindowFontScale(0.9f * SCAL.x / gui.dpiScale);
                 ImGui::TextColored(GUI_COLOR_TEXT, "%s", notice.msg.c_str());
                 const auto notice_time = get_notice_time(gui, host, notice.date);
                 const auto notice_time_size = ImGui::CalcTextSize(notice_time.c_str());
@@ -457,7 +457,7 @@ static void draw_notice_info(GuiState &gui, HostState &host) {
                 ImGui::SetNextWindowSize(DELETE_POPUP_SIZE, ImGuiCond_Always);
                 ImGui::SetNextWindowPos(ImVec2((display_size.x / 2.f) - (DELETE_POPUP_SIZE.x / 2.f), (display_size.y / 2.f) - (DELETE_POPUP_SIZE.y / 2.f)));
                 if (ImGui::BeginPopupModal("Delete All", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings)) {
-                    ImGui::SetWindowFontScale(1.4f * SCAL.x);
+                    ImGui::SetWindowFontScale(1.4f * SCAL.x / gui.dpiScale);
                     const auto notif_deleted = !indicator["notif_deleted"].empty() ? indicator["notif_deleted"].c_str() : "The notifications will be deleted.";
                     auto common = host.common_dialog.lang.common;
                     ImGui::SetCursorPos(ImVec2((DELETE_POPUP_SIZE.x / 2.f) - (ImGui::CalcTextSize(notif_deleted).x / 2.f), (DELETE_POPUP_SIZE.y / 2.f) - (46.f * SCAL.y)));
@@ -521,7 +521,7 @@ void draw_information_bar(GuiState &gui, HostState &host) {
     }
 
     const auto SCAL_PIX_FONT = 19.2f / 24.f;
-    const auto scal_default_font = ImGui::GetFontSize() / 19.2f;
+    const auto scal_default_font = ImGui::GetFontSize() / 19.2f / gui.dpiScale;
     const auto scal_clock_default_font = 24.f * scal_default_font;
     const auto scal_format_default_font = 18.f * scal_default_font;
     const auto scal_clock_font_size = scal_clock_default_font / ImGui::GetFontSize();

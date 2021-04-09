@@ -237,12 +237,12 @@ void draw_user_management(GuiState &gui, HostState &host) {
     if (!host.display.imgui_render || ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows))
         gui.live_area.information_bar = true;
 
-    ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(0.f, MENUBAR_HEIGHT), display_size, IM_COL32(10.f, 50.f, 140.f, 255.f), 0.f, ImDrawCornerFlags_All);
+    ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(0.f, 0.f), display_size, IM_COL32(10.f, 50.f, 140.f, 255.f), 0.f, ImDrawCornerFlags_All);
 
     const auto user_path{ fs::path(host.pref_path) / "ux0/user" };
     const auto AVATAR_SIZE = ImVec2(128 * SCAL.x, 128 * SCAL.y);
     const auto SMALL_AVATAR_SIZE = (ImVec2(34.f * SCAL.x, 34.f * SCAL.y));
-    ImGui::SetWindowFontScale(1.4f * SCAL.x);
+    ImGui::SetWindowFontScale(1.4f * SCAL.x / gui.dpiScale);
     const auto calc_title = ImGui::CalcTextSize(title.c_str()).y / 2.f;
     ImGui::SetCursorPos(ImVec2(54.f, (32.f * SCAL.y) - calc_title));
     ImGui::TextColored(GUI_COLOR_TEXT, title.c_str());
@@ -428,7 +428,7 @@ void draw_user_management(GuiState &gui, HostState &host) {
     } else if (menu == "delete") {
         title = DELETE_USER_STR;
         if (user_id.empty()) {
-            ImGui::SetWindowFontScale(1.f * SCAL.x);
+            ImGui::SetWindowFontScale(1.f * SCAL.x / gui.dpiScale);
             ImGui::SetCursorPos(ImVec2((SIZE_USER.x / 2.f) - (ImGui::CalcTextSize("Select the user you want delete.").x / 2.f), 5.f * SCAL.y));
             const auto CHILD_DELETE_USER_SIZE = ImVec2(674 * SCAL.x, 308.f * SCAL.y);
             const auto SELECT_SIZE = ImVec2(674.f * SCAL.x, 46.f * SCAL.y);
@@ -504,7 +504,7 @@ void draw_user_management(GuiState &gui, HostState &host) {
     ImGui::EndChild();
     ImGui::SetCursorPosY(WINDOW_SIZE.y - POS_SEPARATOR);
     ImGui::Separator();
-    ImGui::SetWindowFontScale(1.f * SCAL.x);
+    ImGui::SetWindowFontScale(1.f * SCAL.x / gui.dpiScale);
     const auto USER_ALREADY_INIT = host.cfg.user_id == host.io.user_id;
     if ((menu.empty() && USER_ALREADY_INIT) || (!menu.empty() && (menu != "confirm") && del_menu.empty())) {
         ImGui::SetCursorPos(ImVec2(54.f * SCAL.x, ImGui::GetCursorPosY() + (10.f * SCAL.y)));

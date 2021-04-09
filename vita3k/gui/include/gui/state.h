@@ -248,4 +248,6 @@ struct GuiState {
     ImFont *vita_font{};
     ImFont *large_font{};
     bool fw_font = false;
+
+    float dpiScale = 1.0f;
 };

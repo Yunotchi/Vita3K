@@ -500,9 +500,9 @@ void draw_start_screen(GuiState &gui, HostState &host) {
     ImGui::Begin("##start_screen", &gui.live_area.start_screen, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings);
 
     if (gui.start_background)
-        ImGui::GetForegroundDrawList()->AddImage(gui.start_background, ImVec2(0.f, MENUBAR_HEIGHT), display_size);
+        ImGui::GetBackgroundDrawList()->AddImage(gui.start_background, ImVec2(0.f, 0.f), display_size);
     else
-        ImGui::GetForegroundDrawList()->AddRectFilled(ImVec2(0.f, MENUBAR_HEIGHT), display_size, IM_COL32(128.f, 128.f, 128.f, 128.f), 0.f, ImDrawCornerFlags_All);
+        ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(0.f, 0.f), display_size, IM_COL32(128.f, 128.f, 128.f, 128.f), 0.f, ImDrawCornerFlags_All);
 
     ImGui::GetForegroundDrawList()->AddRect(ImVec2(32.f * SCAL.x, 64.f * SCAL.y), ImVec2(display_size.x - (32.f * SCAL.x), display_size.y - (32.f * SCAL.y)), IM_COL32(255.f, 255.f, 255.f, 255.f), 20.0f, ImDrawCornerFlags_All);
 
@@ -513,8 +513,8 @@ void draw_start_screen(GuiState &gui, HostState &host) {
     SAFE_LOCALTIME(&tt, &local);
 
     ImGui::PushFont(gui.vita_font);
-    const auto SCAL_DEFAULT_FONT = ImGui::GetFontSize() / 19.2f;
-    const auto SCAL_PIX_DATE_FONT = 34.f / 28.f;
+    const auto SCAL_DEFAULT_FONT = ImGui::GetFontSize() / 19.2f / gui.dpiScale;
+    const auto SCAL_PIX_DATE_FONT = 34.f / 28.f / gui.dpiScale;
     const auto DATE_FONT_SIZE = 34.f * SCAL_DEFAULT_FONT;
     const auto SCAL_DATE_FONT_SIZE = DATE_FONT_SIZE / ImGui::GetFontSize();
 
@@ -527,9 +527,9 @@ void draw_start_screen(GuiState &gui, HostState &host) {
     ImGui::PopFont();
 
     ImGui::PushFont(gui.large_font);
-    const auto SCAL_DEFAULT_LARGE_FONT = ImGui::GetFontSize() / 116.f;
+    const auto SCAL_DEFAULT_LARGE_FONT = ImGui::GetFontSize() / 116.f / gui.dpiScale;
     const auto LARGE_FONT_SIZE = 116.f * SCAL_DEFAULT_FONT;
-    const auto SCAL_PIX_LARGE_FONT = 96.f / ImGui::GetFontSize();
+    const auto SCAL_PIX_LARGE_FONT = 96.f / ImGui::GetFontSize() / gui.dpiScale;
 
     const auto CLOCK_STR = DATE_TIME["clock"];
     const auto CALC_CLOCK_SIZE = ImGui::CalcTextSize(CLOCK_STR.c_str());
@@ -615,7 +615,7 @@ void draw_settings(GuiState &gui, HostState &host) {
     ImGui::Begin("##settings", &gui.live_area.settings, ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings);
     if (is_background)
         ImGui::GetBackgroundDrawList()->AddImage(gui.apps_background["NPXS10015"], ImVec2(0.f, MENUBAR_HEIGHT), display_size);
-    ImGui::SetWindowFontScale(1.6f * SCAL.x);
+    ImGui::SetWindowFontScale(1.6f * SCAL.x / gui.dpiScale);
     const auto title_size_str = ImGui::CalcTextSize(title.c_str(), 0, false, SIZE_LIST.x);
     ImGui::PushTextWrapPos(((display_size.x - SIZE_LIST.x) / 2.f) + SIZE_LIST.x);
     ImGui::SetCursorPos(ImVec2((display_size.x / 2.f) - (title_size_str.x / 2.f), (35.f * SCAL.y) - (title_size_str.y / 2.f)));
@@ -625,13 +625,13 @@ void draw_settings(GuiState &gui, HostState &host) {
     if (settings_menu == "theme_background") {
         // Search Bar
         if ((menu == "theme") && theme_selected.empty()) {
-            ImGui::SetWindowFontScale(1.2f * SCAL.x);
+            ImGui::SetWindowFontScale(1.2f * SCAL.x / gui.dpiScale);
             const auto search_size = ImGui::CalcTextSize("Search");
-            ImGui::SetCursorPos(ImVec2(display_size.x - 220.f - search_size.x, (35.f * SCAL.y) - (search_size.y / 2.f)));
+            ImGui::SetCursorPos(ImVec2(display_size.x - (220.f * SCAL.x) - search_size.x, (35.f * SCAL.y) - (search_size.y / 2.f)));
             ImGui::TextColored(GUI_COLOR_TEXT, "Search");
             ImGui::SameLine();
-            search_bar.Draw("##search_bar", 200);
-            ImGui::SetWindowFontScale(1.6f * SCAL.x);
+            search_bar.Draw("##search_bar", 200 * SCAL.x);
+            ImGui::SetWindowFontScale(1.6f * SCAL.x / gui.dpiScale);
         }
     }
 
@@ -778,7 +778,7 @@ void draw_settings(GuiState &gui, HostState &host) {
                         ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 10.f);
                         ImGui::BeginChild("##delete_theme_popup", POPUP_SIZE, true, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings);
                         ImGui::SetCursorPos(ImVec2(48.f * SCAL.x, 28.f * SCAL.y));
-                        ImGui::SetWindowFontScale(1.6f * SCAL.x);
+                        ImGui::SetWindowFontScale(1.6f * SCAL.x / gui.dpiScale);
                         ImGui::Image(gui.themes_preview[theme_selected]["package"], SIZE_MINI_PACKAGE);
                         ImGui::SameLine();
                         const auto CALC_TITLE = ImGui::CalcTextSize(themes_info[theme_selected].title.c_str(), nullptr, false, POPUP_SIZE.x - SIZE_MINI_PACKAGE.x - 48.f).y / 2.f;
@@ -1155,7 +1155,7 @@ void draw_settings(GuiState &gui, HostState &host) {
     ImGui::PopStyleVar();
 
     // Back
-    ImGui::SetWindowFontScale(1.00f);
+    ImGui::SetWindowFontScale(1.2f * SCAL.x / gui.dpiScale);
     ImGui::SetCursorPos(ImVec2(6.f, display_size.y - (84.f * SCAL.y)));
     if (ImGui::Button("Back", ImVec2(64.f * SCAL.x, 40.f * SCAL.y))) {
         if (!settings_menu.empty()) {

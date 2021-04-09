@@ -214,7 +214,7 @@ void draw_app_context_menu(GuiState &gui, HostState &host, const std::string &ap
                 ImGui::TextColored(GUI_COLOR_TEXT, "\n");
             }
             ImGui::EndChild();
-            ImGui::SetWindowFontScale(1.4f * scal.x);
+            ImGui::SetWindowFontScale(1.4f * scal.x / gui.dpiScale);
             ImGui::SetCursorPos(ImVec2((WINDOW_SIZE.x / 2.f) - (BUTTON_SIZE.x / 2.f), WINDOW_SIZE.y - BUTTON_SIZE.y - (22.f * scal.y)));
         } else {
             // Delete Data
@@ -222,10 +222,10 @@ void draw_app_context_menu(GuiState &gui, HostState &host, const std::string &ap
                 ImGui::SetCursorPos(ImVec2((WINDOW_SIZE.x / 2.f) - (PUPOP_ICON_SIZE.x / 2.f), 24.f * scal.y));
                 ImGui::Image(gui.app_selector.user_apps_icon[title_id], PUPOP_ICON_SIZE);
             }
-            ImGui::SetWindowFontScale(1.6f * scal.x);
+            ImGui::SetWindowFontScale(1.6f * scal.x / gui.dpiScale);
             ImGui::SetCursorPosX((WINDOW_SIZE.x / 2.f) - (ImGui::CalcTextSize(APP_INDEX->stitle.c_str()).x / 2.f));
             ImGui::TextColored(GUI_COLOR_TEXT, "%s", APP_INDEX->stitle.c_str());
-            ImGui::SetWindowFontScale(1.4f * scal.x);
+            ImGui::SetWindowFontScale(1.4f * scal.x / gui.dpiScale);
             const auto app_delete = is_lang ? lang["app_delete"] : "This application and all related data, including saved data, will be deleted.";
             const auto save_delete = is_lang ? lang["save_delete"] : "Do you want to delete this saved data?";
             const auto ask_delete = context_dialog == "save" ? save_delete : app_delete;
@@ -235,7 +235,7 @@ void draw_app_context_menu(GuiState &gui, HostState &host, const std::string &ap
             ImGui::PopTextWrapPos();
             if ((context_dialog == "app") && ImGui::IsItemHovered())
                 ImGui::SetTooltip("Deleting a application may take a while\ndepending on its size and your hardware.");
-            ImGui::SetWindowFontScale(1.4f * scal.x);
+            ImGui::SetWindowFontScale(1.4f * scal.x / gui.dpiScale);
             ImGui::SetCursorPos(ImVec2((WINDOW_SIZE.x / 2) - (BUTTON_SIZE.x + (20.f * scal.x)), WINDOW_SIZE.y - BUTTON_SIZE.y - (24.0f * scal.y)));
             if (ImGui::Button(!common["cancel"].empty() ? common["cancel"].c_str() : "Cancel", BUTTON_SIZE) || ImGui::IsKeyPressed(host.cfg.keyboard_button_circle)) {
                 context_dialog.clear();
@@ -264,7 +264,7 @@ void draw_app_context_menu(GuiState &gui, HostState &host, const std::string &ap
         ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
         ImGui::SetNextWindowSize(display_size, ImGuiCond_Always);
         ImGui::Begin("##information", &information, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings);
-        ImGui::SetWindowFontScale(1.5f * scal.x);
+        ImGui::SetWindowFontScale(1.5f * scal.x / gui.dpiScale);
         ImGui::SetCursorPos(ImVec2(10.0f * scal.x, 10.0f * scal.y));
         if (ImGui::Button("X", ImVec2(40.f * scal.x, 40.f * scal.y)) || ImGui::IsKeyPressed(host.cfg.keyboard_button_circle)) {
             information = false;

@@ -817,7 +817,7 @@ void draw_live_area_screen(GuiState &gui, HostState &host) {
 
     if (is_background)
         ImGui::GetBackgroundDrawList()->AddImage((gui.users[host.io.user_id].use_theme_bg && !gui.theme_backgrounds.empty()) ? gui.theme_backgrounds[gui.current_theme_bg] : gui.user_backgrounds[gui.users[host.io.user_id].backgrounds[gui.current_user_bg]],
-            ImVec2(0.f, 32.f), display_size);
+            ImVec2(0.f, 0.f), display_size);
     else
         ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(0.f, MENUBAR_HEIGHT), display_size, IM_COL32(11.f, 90.f, 252.f, 180.f), 0.f, ImDrawCornerFlags_All);
 

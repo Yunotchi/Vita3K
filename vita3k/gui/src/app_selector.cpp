@@ -240,9 +240,9 @@ void draw_app_selector(GuiState &gui, HostState &host) {
 
     if (is_background)
         ImGui::GetBackgroundDrawList()->AddImage((gui.users[host.io.user_id].use_theme_bg && !gui.theme_backgrounds.empty()) ? gui.theme_backgrounds[gui.current_theme_bg] : gui.user_backgrounds[gui.users[host.io.user_id].backgrounds[gui.current_user_bg]],
-            ImVec2(0.f, MENUBAR_BG_HEIGHT), display_size);
+            ImVec2(0.f, 0.f), display_size);
     else
-        ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(0.f, MENUBAR_BG_HEIGHT), display_size, IM_COL32(11.f, 90.f, 252.f, 160.f), 0.f, ImDrawCornerFlags_All);
+        ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(0.f, 0.f), display_size, IM_COL32(11.f, 90.f, 252.f, 160.f), 0.f, ImDrawCornerFlags_All);
 
     const float icon_size = static_cast<float>(host.cfg.icon_size);
 
@@ -250,11 +250,11 @@ void draw_app_selector(GuiState &gui, HostState &host) {
     case SELECT_APP:
         ImGui::SetWindowFontScale(1.1f);
         std::string title_id_label = "Title ID";
-        float title_id_size = (ImGui::CalcTextSize(title_id_label.c_str()).x + 60.f) * scal.x;
+        float title_id_size = (ImGui::CalcTextSize(title_id_label.c_str()).x / gui.dpiScale + 60.f) * scal.x;
         std::string app_ver_label = "Version";
-        float app_ver_size = (ImGui::CalcTextSize(app_ver_label.c_str()).x + 30.f) * scal.x;
+        float app_ver_size = (ImGui::CalcTextSize(app_ver_label.c_str()).x / gui.dpiScale + 30.f) * scal.x;
         std::string category_label = "Category";
-        float category_size = (ImGui::CalcTextSize(category_label.c_str()).x + 30.f) * scal.x;
+        float category_size = (ImGui::CalcTextSize(category_label.c_str()).x / gui.dpiScale + 30.f) * scal.x;
         ImGui::PushStyleColor(ImGuiCol_Text, GUI_COLOR_TEXT_TITLE);
         if (!host.cfg.apps_list_grid) {
             ImGui::Columns(5);
@@ -445,7 +445,7 @@ void draw_app_selector(GuiState &gui, HostState &host) {
             ImGui::Columns(1);
         }
         ImGui::Separator();
-        const auto POS_APP_LIST = ImVec2(60.f * scal.x, 48.f + MENUBAR_HEIGHT);
+        const auto POS_APP_LIST = ImVec2(60.f * scal.x, 48.f * scal.y + MENUBAR_HEIGHT);
         const auto SIZE_APP_LIST = ImVec2((host.cfg.apps_list_grid ? 840.f : 900.f) * scal.x, display_size.y - POS_APP_LIST.y);
         ImGui::SetNextWindowPos(host.cfg.apps_list_grid ? POS_APP_LIST : ImVec2(1.f, POS_APP_LIST.y), ImGuiCond_Always);
         ImGui::BeginChild("##apps_list", SIZE_APP_LIST, false, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings);
@@ -474,7 +474,7 @@ void draw_app_selector(GuiState &gui, HostState &host) {
             ImGui::SetColumnWidth(2, GRID_COLUMN_SIZE);
             ImGui::SetColumnWidth(3, GRID_COLUMN_SIZE);
         }
-        ImGui::SetWindowFontScale(0.9f * scal.x);
+        ImGui::SetWindowFontScale(0.9f * scal.x / gui.dpiScale);
         ImGui::PushStyleColor(ImGuiCol_Text, GUI_COLOR_TEXT);
         const auto display_app = [&](const std::vector<gui::App> &apps_list, std::map<std::string, ImGui_Texture> &apps_icon) {
             for (const auto &app : apps_list) {
@@ -540,10 +540,10 @@ void draw_app_selector(GuiState &gui, HostState &host) {
     }
 
     const auto SELECT_SIZE = ImVec2(50.f * scal.x, 60.f * scal.y);
-    ImGui::SetWindowFontScale(2.f * scal.x);
+    ImGui::SetWindowFontScale(2.f * scal.x / gui.dpiScale);
     ImGui::PushStyleVar(ImGuiStyleVar_SelectableTextAlign, ImVec2(0.5f, 0.5f));
     if (current_scroll_pos > 0) {
-        ImGui::SetCursorPos(ImVec2(display_size.x - SELECT_SIZE.x - (5.f * scal.x), 48.f));
+        ImGui::SetCursorPos(ImVec2(display_size.x - SELECT_SIZE.x - (5.f * scal.x), 48.f * gui.dpiScale));
         if ((ImGui::Selectable("^", false, ImGuiSelectableFlags_None, SELECT_SIZE))
             || ImGui::IsKeyPressed(host.cfg.keyboard_leftstick_up) || ImGui::IsKeyPressed(host.cfg.keyboard_button_up))
             scroll_type = 1;
@@ -564,7 +564,7 @@ void draw_app_selector(GuiState &gui, HostState &host) {
             || ImGui::IsKeyPressed(host.cfg.keyboard_leftstick_down) || ImGui::IsKeyPressed(host.cfg.keyboard_button_down))
             scroll_type = -1;
     }
-    ImGui::SetWindowFontScale(1.f * scal.x);
+    ImGui::SetWindowFontScale(1.f * scal.x / gui.dpiScale);
     ImGui::PopStyleVar();
     ImGui::End();
     ImGui::PopStyleVar();

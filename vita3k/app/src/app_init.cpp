@@ -151,7 +151,10 @@ bool init(HostState &state, Config &cfg, const Root &root_paths, CPUDepInject in
     }
 #ifdef WIN32
     SetProcessDpiAwareness(PROCESS_PER_MONITOR_DPI_AWARE);
-    state.window = WindowPtr(SDL_CreateWindow(window_title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, DEFAULT_RES_WIDTH, DEFAULT_RES_HEIGHT, window_type | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI), SDL_DestroyWindow);
+    float ddpi, hdpi, vdpi;
+    SDL_GetDisplayDPI(0, &ddpi, &hdpi, &vdpi);
+    float dpiScale = ddpi / 96;
+    state.window = WindowPtr(SDL_CreateWindow(window_title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, DEFAULT_RES_WIDTH * dpiScale, DEFAULT_RES_HEIGHT * dpiScale, window_type | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI), SDL_DestroyWindow);
 #else
     state.window = WindowPtr(SDL_CreateWindow(window_title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, DEFAULT_RES_WIDTH, DEFAULT_RES_HEIGHT, window_type | SDL_WINDOW_RESIZABLE), SDL_DestroyWindow);
 #endif

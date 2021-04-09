@@ -42,7 +42,7 @@
 
 namespace gui {
 
-static void init_style() {
+static void init_style(GuiState &gui) {
     ImGui::StyleColorsDark();
 
     ImGuiStyle *style = &ImGui::GetStyle();
@@ -58,6 +58,8 @@ static void init_style() {
     style->ScrollbarRounding = 8.0f;
     style->GrabMinSize = 4.0f;
     style->GrabRounding = 2.5f;
+
+    style->ScaleAllSizes(gui.dpiScale);
 
     style->Colors[ImGuiCol_Text] = ImVec4(0.95f, 0.95f, 0.95f, 1.00f);
     style->Colors[ImGuiCol_TextDisabled] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
@@ -105,7 +107,11 @@ static void init_style() {
 
 static void init_font(GuiState &gui, HostState &host) {
     ImGuiIO &io = ImGui::GetIO();
-    gui.monospaced_font = io.Fonts->AddFontDefault();
+    if (WIN32) {
+        gui.monospaced_font = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\consola.ttf", 13.0f * gui.dpiScale, NULL, io.Fonts->GetGlyphRangesJapanese());
+    } else {
+        gui.monospaced_font = io.Fonts->AddFontDefault();
+    }
 
     // Set Large Font
     static const ImWchar large_font_chars[] = { L'0', L'1', L'2', L'3', L'4', L'5', L'6', L'7', L'8', L'9', L':', L'A', L'M', L'P' };
@@ -151,35 +157,35 @@ static void init_font(GuiState &gui, HostState &host) {
     if (fs::exists(latin_fw_font_path)) {
         // Add fw font to imgui
         gui.fw_font = true;
-        gui.vita_font = io.Fonts->AddFontFromFileTTF(latin_fw_font_path.string().c_str(), 19.2f, &font_config, latin_range);
+        gui.vita_font = io.Fonts->AddFontFromFileTTF(latin_fw_font_path.string().c_str(), 19.2f * gui.dpiScale, &font_config, latin_range);
         font_config.MergeMode = true;
-        io.Fonts->AddFontFromFileTTF((fw_font_path / "jpn0.pvf").string().c_str(), 19.2f, &font_config, io.Fonts->GetGlyphRangesJapanese());
-        io.Fonts->AddFontFromFileTTF((fw_font_path / "jpn0.pvf").string().c_str(), 19.2f, &font_config, extra_range);
+        io.Fonts->AddFontFromFileTTF((fw_font_path / "jpn0.pvf").string().c_str(), 19.2f * gui.dpiScale, &font_config, io.Fonts->GetGlyphRangesJapanese());
+        io.Fonts->AddFontFromFileTTF((fw_font_path / "jpn0.pvf").string().c_str(), 19.2f * gui.dpiScale, &font_config, extra_range);
 
         const auto sys_lang = static_cast<SceSystemParamLang>(host.cfg.sys_lang);
         if (host.cfg.asia_font_support || (sys_lang == SCE_SYSTEM_PARAM_LANG_KOREAN))
-            io.Fonts->AddFontFromFileTTF((fw_font_path / "kr0.pvf").string().c_str(), 19.2f, &font_config, korean_range);
+            io.Fonts->AddFontFromFileTTF((fw_font_path / "kr0.pvf").string().c_str(), 19.2f * gui.dpiScale, &font_config, korean_range);
         if (host.cfg.asia_font_support || (sys_lang == SCE_SYSTEM_PARAM_LANG_CHINESE_T))
-            io.Fonts->AddFontFromFileTTF((fw_font_path / "cn0.pvf").string().c_str(), 19.2f, &font_config, chinese_range);
+            io.Fonts->AddFontFromFileTTF((fw_font_path / "cn0.pvf").string().c_str(), 19.2f * gui.dpiScale, &font_config, chinese_range);
         else if (sys_lang == SCE_SYSTEM_PARAM_LANG_CHINESE_S)
-            io.Fonts->AddFontFromFileTTF((fw_font_path / "cn0.pvf").string().c_str(), 19.2f, &font_config, io.Fonts->GetGlyphRangesChineseSimplifiedCommon());
+            io.Fonts->AddFontFromFileTTF((fw_font_path / "cn0.pvf").string().c_str(), 19.2f * gui.dpiScale, &font_config, io.Fonts->GetGlyphRangesChineseSimplifiedCommon());
 
         io.Fonts->Build();
         font_config.MergeMode = false;
-        gui.large_font = io.Fonts->AddFontFromFileTTF(latin_fw_font_path.string().c_str(), 116.f, &font_config, large_font_chars);
+        gui.large_font = io.Fonts->AddFontFromFileTTF(latin_fw_font_path.string().c_str(), 116.f * gui.dpiScale, &font_config, large_font_chars);
     } else {
         LOG_WARN("Could not find firmware font file at \"{}\", install firmware fonts package to fix this.", latin_fw_font_path.string());
         // Set up default font path
         const auto default_font_path{ fs::path(host.base_path) / "data/fonts/mplus-1mn-bold.ttf" };
         // Check existence of default font file
         if (fs::exists(default_font_path)) {
-            gui.vita_font = io.Fonts->AddFontFromFileTTF(default_font_path.string().c_str(), 22.f, &font_config, latin_range);
+            gui.vita_font = io.Fonts->AddFontFromFileTTF(default_font_path.string().c_str(), 22.f * gui.dpiScale, &font_config, latin_range);
             font_config.MergeMode = true;
-            io.Fonts->AddFontFromFileTTF(default_font_path.string().c_str(), 22.f, &font_config, io.Fonts->GetGlyphRangesJapanese());
+            io.Fonts->AddFontFromFileTTF(default_font_path.string().c_str(), 22.f * gui.dpiScale, &font_config, io.Fonts->GetGlyphRangesJapanese());
 
             io.Fonts->Build();
             font_config.MergeMode = false;
-            gui.large_font = io.Fonts->AddFontFromFileTTF(default_font_path.string().c_str(), 134.f, &font_config, large_font_chars);
+            gui.large_font = io.Fonts->AddFontFromFileTTF(default_font_path.string().c_str(), 134.f * gui.dpiScale, &font_config, large_font_chars);
 
             LOG_INFO("Using default Vita3K font.");
         } else
@@ -449,12 +455,19 @@ ImTextureID load_image(GuiState &gui, const char *data, const std::uint32_t size
 }
 
 void init(GuiState &gui, HostState &host) {
+
+    if (WIN32) {
+        float ddpi, hdpi, vdpi;
+        SDL_GetDisplayDPI(0, &ddpi, &hdpi, &vdpi);
+        gui.dpiScale = ddpi / 96;
+    }
+
     ImGui::CreateContext();
     gui.imgui_state.reset(ImGui_ImplSdl_Init(host.renderer.get(), host.window.get(), host.base_path));
 
     assert(gui.imgui_state);
 
-    init_style();
+    init_style(gui);
     init_font(gui, host);
     init_lang(gui, host);
     get_notice_list(host);
